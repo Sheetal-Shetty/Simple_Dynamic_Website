@@ -1,0 +1,31 @@
+version: '3.8'
+
+services:
+  web:
+    image: php:8.1-apache
+    container_name: simple_dynamic_website_web
+    volumes:
+      - ./www:/var/www/html  # map your repo code into Apache
+    ports:
+      - "8080:80"            # host port 8080 forwards to container port 80
+    depends_on:
+      - db
+    environment:
+      # you can add any PHP or Apache environment variables here
+      APACHE_RUN_USER: www-data
+      APACHE_RUN_GROUP: www-data
+
+  db:
+    image: mysql:8.0
+    container_name: simple_dynamic_website_db
+    restart: always
+    environment:
+      MYSQL_ROOT_PASSWORD: rootpassword
+      MYSQL_DATABASE: myappdb
+      MYSQL_USER: myuser
+      MYSQL_PASSWORD: mypassword
+    volumes:
+      - db_data:/var/lib/mysql
+
+volumes:
+  db_data:
